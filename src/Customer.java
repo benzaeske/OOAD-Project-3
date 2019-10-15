@@ -28,6 +28,7 @@ public class Customer {
 	
 	//Returns a rental's tools (baseTools) to the store's inventory and updates the store's completedRental list. Removes the rental from the store's activeRentals list TODO
 	public void completeRental(Rental rental) {
+		this.rentals.remove(rental);
 		this.store.completeRental(rental);
 	}
 	
@@ -51,20 +52,20 @@ abstract class RentAlgorithm {
 	
 }
 
-class BusinessRentAlgorithm extends RentAlgorithm {
+class CasualRentAlgorithm extends RentAlgorithm {
 	
 	public Rental rent(HardwareStore store) {
-		//Rent 3 tools for 7 days
+		//1-2 tools for 1-2 nights
 		//TODO
 		return null;
 	}
 	
 }
 
-class CasualRentAlgorithm extends RentAlgorithm {
+class BusinessRentAlgorithm extends RentAlgorithm {
 	
 	public Rental rent(HardwareStore store) {
-		//1-2 tools for 1-2 nights
+		//Rent 3 tools for 7 days
 		//TODO
 		return null;
 	}
@@ -110,8 +111,12 @@ class Rental {
 	}
 	
 	//Prints tools + options (tools) for which customer, for how many days, and at what cost
-	public void printRental() {
-		System.out.println("");
+	public void printRental() 
+	{
+		for(Tool t: tools)
+		{
+			System.out.println(t.getDescription);
+		}
 	}
 	
 	public int getCost() {
