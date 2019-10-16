@@ -52,7 +52,10 @@ public class HardwareStore {
 	}
 	
 	//Returns a given 'number' of random tools from the store's inventory.
-	public List<Tool> getRandomTools(int number) {
+	//Because each tool needs a unique number/combination of extras, each tool needs to be retrieved one at a time
+	//This should take no parameter because it should only return 1 tool
+	//Should handle removing tool from store inventory
+	public Tool getRandomTool() {
 		return null; //TODO
 	}
 	
@@ -95,5 +98,9 @@ public class HardwareStore {
 		System.out.println("");
 	}
 	
+	public int getInventorySize()
+	{
+		return this.inventory.size();
+	}
 	
 }
