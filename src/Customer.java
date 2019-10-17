@@ -2,7 +2,7 @@ import java.util.*;
 
 //----------------------------Customer class----------------------------
 
-//This is our Observer
+//This is our Observer class
 public class Customer {
 	
 	public String name;
@@ -19,14 +19,6 @@ public class Customer {
 		this.type = type;
 		this.rentAlgorithm = rentAlgorithm;
 	}
-	
-
-	//Do we need this? Renting handled by update()
-	//Helper method for doing a rental
-	// public Rental rent() {
-	// 	Rental newRental = this.rentAlgorithm.rent(this.store);
-	// 	return newRental;
-	// }
 
 	//Returns a rental's tools (baseTools) to the store's inventory and updates the store's completedRental list. Removes the rental from the store's activeRentals list
 	public void completeRental(Rental rental) {
@@ -319,6 +311,7 @@ class Rental {
 }
 
 //--------------- Customer Factories -------------------
+//Customer factories are used at the start of the simulation to create 12 generic customer objects
 
 abstract class CustomerFactory {
 	int customersMade;

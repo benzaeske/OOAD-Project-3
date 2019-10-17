@@ -2,11 +2,13 @@
 import java.util.*;
 
 //----------------------------Basic Tool Objects----------------------------
+//Tool interface. Has methods to get the cost and description of a Tool
 public interface Tool {
 	public int cost();
 	public String getDescription();
 }
 
+//-------Concrete Tool implementations below--------
 class PaintingTool implements Tool {
 	public String name;
 	public String type;
@@ -92,13 +94,17 @@ class YardworkTool implements Tool {
 	}
 }
 
-//----------------------------Basic Tool Objects----------------------------
+//----------------------------Tool Decorator----------------------------
+
+//Abstract ToolDecorator class.
 abstract class ToolDecorator implements Tool {
 	protected Tool tool;
 	public ToolDecorator(Tool tool) {
 		this.tool = tool;
 	}
 }
+
+//------Concrete Tool Decorators below------
 
 class ExtensionCord extends ToolDecorator {
 	public ExtensionCord(Tool tool)
@@ -152,6 +158,7 @@ class ProtectiveGearPackage extends ToolDecorator{
 }
 
 //----------------------------Option Factories----------------------------
+//Option factories are used to add one of the three options onto a tool
 
 abstract class OptionFactory {
 	public abstract Tool addOption(Tool tool);
@@ -179,6 +186,9 @@ class ProtectiveGearFactory extends OptionFactory {
 }
 
 //----------------------------Tool Factories----------------------------
+/*Tool factories are used to generate tools. They are used in the initialization 
+ * phase of the simulation to generate the 24 tools in the store's inventory
+ */
 
 abstract class ToolFactory {
 	int toolsMade;

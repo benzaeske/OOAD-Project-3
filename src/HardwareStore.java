@@ -27,9 +27,10 @@ public class HardwareStore {
 	}
 
 //----------------Simulation methods----------------	
-	
-	//Run a loop and call doDay each time.
+//Methods related to running the hardware store 35-day simulation
+		
 	public void runSimulation() {
+		//Run a loop and call doDay each time.
 		while (this.currentDay >= 0) {
 			this.doDay();
 			this.currentDay -= 1;
@@ -60,7 +61,7 @@ public class HardwareStore {
 		if (this.currentDay == 0) {
 			System.out.println("\n----(End of Simulation)----");
 			System.out.println("Total revenue earned over 35 days: $" + this.revenue);
-			System.out.println("Total Rentals: " + (this.businessRentCount + this.casualRentCount + this.regularRentCount));
+			System.out.println("Total Rentals: " + this.rentCount);
 			System.out.println("Rentals by Customer Type");
 			System.out.println("Business Customers: " + this.businessRentCount);
 			System.out.println("Casual Customers: " + this.casualRentCount);
@@ -77,25 +78,15 @@ public class HardwareStore {
 		this.completedRentals.add(rental);
 	}
 	
-	//Because each tool needs a unique number/combination of extras, each tool needs to be retrieved one at a time
-	//This should take no parameter because it should only return 1 tool
-	//Should handle removing tool from store inventory
-	public Tool getRandomTool() {
-		Random rand = new Random();
-		int randIndex = rand.nextInt(this.inventory.size());
-		Tool randTool = this.inventory.get(randIndex);
-		this.inventory.remove(randIndex);
-		return randTool;
-	}
-	
 //----------------Observer pattern methods----------------
 	
-	//Add a customer (observer)
+	//Add a customer. Our equivalent of adding an observer
 	public void addCustomer(Customer customer) {
 		this.customers.add(customer);
 		customer.store = this;
 	}
 	
+	//Our equivalent of notifyObservers()
 	//customer.update() for all customers. They will handle if they can rent or not and will handle returning their rentals. 
 	//Add the returned rental to activeRentals if not null. keep track of the day's revenue along the way (new rentals)
 	public int notifyCustomers() {
@@ -106,6 +97,7 @@ public class HardwareStore {
 			//Update active rentals and rental counts if the customer makes a new rental
 			if (newRental != null) {
 				this.activeRentals.add(newRental);
+				this.rentCount += 1;
 				switch(customer.type) {
 					case "business":
 						this.businessRentCount += 1;
@@ -121,7 +113,19 @@ public class HardwareStore {
 		return dayRevenue;
 	}
 		
-//----------------Helper print methods----------------
+//----------------Helper methods----------------
+//Methods which hold logic that may need to be repeated multiple times.
+	
+	//Because each tool needs a unique number/combination of extras, each tool needs to be retrieved one at a time
+	//This should take no parameter because it should only return 1 tool
+	//Should handle removing tool from store inventory
+	public Tool getRandomTool() {
+		Random rand = new Random();
+		int randIndex = rand.nextInt(this.inventory.size());
+		Tool randTool = this.inventory.get(randIndex);
+		this.inventory.remove(randIndex);
+		return randTool;
+	}
 	
 	//helper method that prints completed rentals
 	public void printCompletedRentals() {
