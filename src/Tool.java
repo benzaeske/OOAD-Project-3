@@ -20,7 +20,7 @@ class PaintingTool implements Tool {
 		return this.cost;
 	}
 	public String getDescription() {
-		return this.type;
+		return this.name;
 	}
 }
 
@@ -37,7 +37,7 @@ class ConcreteTool implements Tool {
 		return this.cost;
 	}
 	public String getDescription() {
-		return this.type;
+		return this.name;
 	}
 }
 
@@ -47,14 +47,14 @@ class PlumbingTool implements Tool {
 	protected int cost;
 	public PlumbingTool(String name) {
 		this.name = name;
-		this.type = "Concrete Tool";
+		this.type = "Plumbing Tool";
 		this.cost = 15;
 	}
 	public int cost() {
 		return this.cost;
 	}
 	public String getDescription() {
-		return this.type;
+		return this.name;
 	}
 }
 
@@ -64,14 +64,14 @@ class WoodworkTool implements Tool {
 	protected int cost;
 	public WoodworkTool(String name) {
 		this.name = name;
-		this.type = "Concrete Tool";
+		this.type = "Woodwork Tool";
 		this.cost = 15;
 	}
 	public int cost() {
 		return this.cost;
 	}
 	public String getDescription() {
-		return this.type;
+		return this.name;
 	}
 }
 
@@ -81,14 +81,14 @@ class YardworkTool implements Tool {
 	protected int cost;
 	public YardworkTool(String name) {
 		this.name = name;
-		this.type = "Concrete Tool";
+		this.type = "Yardwork Tool";
 		this.cost = 10;
 	}
 	public int cost() {
 		return this.cost;
 	}
 	public String getDescription() {
-		return this.type;
+		return this.name;
 	}
 }
 
@@ -151,33 +151,82 @@ class ProtectiveGearPackage extends ToolDecorator{
 	}
 }
 
-//----------------------------Factories----------------------------
+//----------------------------Option Factories----------------------------
 
-abstract class ToolFactory {
+abstract class OptionFactory {
 	public abstract Tool addOption(Tool tool);
 }
 
-class ExtensionCordFactory extends ToolFactory {
+class ExtensionCordFactory extends OptionFactory {
 	public Tool addOption(Tool tool) {
 		Tool wrappedTool = new ExtensionCord(tool);
 		return wrappedTool;
 	}
 }
 
-class AccessoryKitFactory extends ToolFactory {
+class AccessoryKitFactory extends OptionFactory {
 	public Tool addOption(Tool tool) {
 		Tool wrappedTool = new AccessoryKit(tool);
 		return wrappedTool;
 	}
 }
 
-class ProtectiveGearFactory extends ToolFactory {
+class ProtectiveGearFactory extends OptionFactory {
 	public Tool addOption(Tool tool) {
 		Tool wrappedTool = new ProtectiveGearPackage(tool);
 		return wrappedTool;
 	}
 }
 
+//----------------------------Tool Factories----------------------------
+
+abstract class ToolFactory {
+	int toolsMade;
+	public ToolFactory() {
+		this.toolsMade = 0;
+	}
+	public abstract Tool getInstance();
+}
+
+class PaintingToolFactory extends ToolFactory {
+	@Override
+	public Tool getInstance() {
+		this.toolsMade += 1;
+		return new PaintingTool("Painting Tool " + this.toolsMade);
+	}
+}
+
+class ConcreteToolFactory extends ToolFactory {
+	@Override
+	public Tool getInstance() {
+		this.toolsMade += 1;
+		return new ConcreteTool("Concrete Tool " + this.toolsMade);
+	}
+}
+
+class PlumbingToolFactory extends ToolFactory {
+	@Override
+	public Tool getInstance() {
+		this.toolsMade += 1;
+		return new PlumbingTool("Plumbing Tool " + this.toolsMade);
+	}
+}
+
+class WoodworkToolFactory extends ToolFactory {
+	@Override
+	public Tool getInstance() {
+		this.toolsMade += 1;
+		return new WoodworkTool("Woodwork Tool " + this.toolsMade);
+	}
+}
+
+class YardworkToolFactory extends ToolFactory {
+	@Override
+	public Tool getInstance() {
+		this.toolsMade += 1;
+		return new YardworkTool("Yardwork Tool " + this.toolsMade);
+	}
+}
 
 
 
