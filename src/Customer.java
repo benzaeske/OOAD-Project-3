@@ -1,8 +1,8 @@
 import java.util.*;
 
-//----------------------------Abstract Customer class----------------------------
+//----------------------------Customer class----------------------------
 
-//This is our Observer
+//This is our Observer class
 public class Customer {
 	
 	public String name;
@@ -10,7 +10,7 @@ public class Customer {
 	public String type;
 	//True if they have space to make an additional rental
 	public boolean canRent;
-	public List<Rental> rentals = new ArrayList<>();
+	public List<Rental> rentals = new ArrayList<Rental>();
 	public HardwareStore store;
 	public RentAlgorithm rentAlgorithm;
 	
@@ -19,16 +19,8 @@ public class Customer {
 		this.type = type;
 		this.rentAlgorithm = rentAlgorithm;
 	}
-	
 
-	//Do we need this? Renting handled by update()
-	//Helper method for doing a rental
-	// public Rental rent() {
-	// 	Rental newRental = this.rentAlgorithm.rent(this.store);
-	// 	return newRental;
-	// }
-
-	//Returns a rental's tools (baseTools) to the store's inventory and updates the store's completedRental list. Removes the rental from the store's activeRentals list TODO
+	//Returns a rental's tools (baseTools) to the store's inventory and updates the store's completedRental list. Removes the rental from the store's activeRentals list
 	public void completeRental(Rental rental) {
 		this.rentals.remove(rental);
 		this.store.completeRental(rental);
@@ -37,21 +29,17 @@ public class Customer {
 	//Returns max number of tools customer can rent
 	public int checkMaxTools()
 	{
-		int maxTools;
+		int maxTools = 3;
 		if(this.type == "casual")
 		{
 			maxTools = 2;
-		}
-		else //Regular and business customers can rent up to 3 tools
-		{
-			maxTools = 3;
 		}
 
 		//Check how much space customer has left
 		int remainingSpace = 3;
 		for(Rental rental : this.rentals)
 		{
-			remainingSpace -= this.rental.tools.size();
+			remainingSpace -= rental.tools.size();
 		}
 
 		//If customer has more space to rent tools
@@ -71,7 +59,7 @@ public class Customer {
 		return maxTools;
 	}
 
-	public bool getRentalStatus(int maxTools)
+	public boolean getRentalStatus(int maxTools)
 	{
 		//If there's enough items in the store and the customer has room for more tools, they canRent = true
 		if(this.store.getInventorySize() >= maxTools && maxTools!=0)
@@ -82,24 +70,16 @@ public class Customer {
 		return false;
 	}
 
-	//Observer update method. Returns a new rental object or null if it can't rent or if it isn't randomly chosen TODO
+	//Observer update method. Returns a new rental object or null if it can't rent or if it isn't randomly chosen 
 	public Rental update() {
-		//Update canRent
-		//If this.canRent -> randomly decide if this customer will rent more today. If so -> return rentAlgorithm.rent();
-		
-		//If canRent 
-			//determine max tools ==> pass into rent
-
-			//RNG: 0 or 1 if rent
-		
-		//Decreasing remainingDays, returning any rentals if remainingDays == 0		
-		for(Rental currentRentals : rentals)
+		//Decreasing remainingDays, returning any rentals if remainingDays == 0	
+		for(int i = 0; i < this.rentals.size(); i++)
 		{
-			currentRentals.remainingDays -= 1;
-
-			if(currentRentals.remainingDays == 0)
+			Rental currentRental = this.rentals.get(i);
+			currentRental.remainingDays -= 1;
+			if(currentRental.remainingDays == 0)
 			{
-				this.completeRental(currentRentals);
+				this.completeRental(currentRental);
 			}
 		}
 
@@ -110,13 +90,14 @@ public class Customer {
 		Random rand = new Random();
 		int willRent = rand.nextInt(2);
 
-		if(willRent && canRent)
+		if (willRent > 0 && this.canRent)
 		{
-			Rental newRental =  this.rentAlgorithm.rent(this.store, maxTools);
+			Rental newRental =  this.rentAlgorithm.rent(this.store, maxTools, this.name);
+			this.rentals.add(newRental);
 			return newRental;
 		}
 		
-		return null; //TODO
+		return null;
 	}
 	
 }
@@ -128,13 +109,13 @@ abstract class RentAlgorithm {
 	//Makes a new rental object and returns it, removing 1-maxTools of tools from the hardwareStore.
 	//Adds 0-6 options to each tool. 
 	//returns completed rental
-	public abstract Rental rent(HardwareStore store, int maxTools);
+	public abstract Rental rent(HardwareStore store, int maxTools, String customerName);
 	
 }
 
 class CasualRentAlgorithm extends RentAlgorithm {
 	
-	public Rental rent(HardwareStore store, int maxTools) {
+	public Rental rent(HardwareStore store, int maxTools, String customerName) {
 		//1-2 tools for 1-2 nights
 		
 		Random rand = new Random();
@@ -178,7 +159,7 @@ class CasualRentAlgorithm extends RentAlgorithm {
 			tools.add(temp);
 
 		}
-		Rental newRental = new Rental(baseTools, tools, numDays);
+		Rental newRental = new Rental(baseTools, tools, numDays, customerName);
 		return newRental;
 	}
 	
@@ -186,7 +167,7 @@ class CasualRentAlgorithm extends RentAlgorithm {
 
 class BusinessRentAlgorithm extends RentAlgorithm {
 	
-	public Rental rent(HardwareStore store, int maxTools) {
+	public Rental rent(HardwareStore store, int maxTools, String customerName) {
 		//Rent 3 tools for 7 days
 		Random rand = new Random();
 		int numTools = 3;
@@ -225,7 +206,7 @@ class BusinessRentAlgorithm extends RentAlgorithm {
 			tools.add(temp);
 
 		}
-		Rental newRental = new Rental(baseTools, tools, numDays);
+		Rental newRental = new Rental(baseTools, tools, numDays, customerName);
 		return newRental;
 	}
 	
@@ -233,9 +214,8 @@ class BusinessRentAlgorithm extends RentAlgorithm {
 
 class RegularRentAlgorithm extends RentAlgorithm {
 	
-	public Rental rent(HardwareStore store, int maxTools) {
+	public Rental rent(HardwareStore store, int maxTools, String customerName) {
 		//1-3 tools for 3-5 nights
-		//TODO
 		Random rand = new Random();
 		int numTools = rand.nextInt(maxTools) + 1;
 
@@ -277,7 +257,7 @@ class RegularRentAlgorithm extends RentAlgorithm {
 			tools.add(temp);
 
 		}
-		Rental newRental = new Rental(baseTools, tools, numDays);
+		Rental newRental = new Rental(baseTools, tools, numDays, customerName);
 		return newRental;
 	}
 	
@@ -288,7 +268,7 @@ class RegularRentAlgorithm extends RentAlgorithm {
 
 class Rental {
 	//Save the base tool types
-	private List<Tool> baseTools;
+	public List<Tool> baseTools;
 	//The list of tools once options are added on
 	public List<Tool> tools;
 	private int days;
@@ -298,7 +278,7 @@ class Rental {
 	public int id;
 	
 	//a customer has a list of rentals, so a rental doesn't need to keep track of the customer it belongs to
-	public Rental(List<Tool> baseTools, List<Tool> tools, int days /*String customerName,int id*/) {
+	public Rental(List<Tool> baseTools, List<Tool> tools, int days, String customerName) {
 		//tools without options
 		this.baseTools = baseTools;
 		this.tools = tools;
@@ -310,21 +290,63 @@ class Rental {
 			cost += tools.get(i).cost();
 		}
 		this.cost = cost;
-		//this.customerName = customerName;
+		this.customerName = customerName;
 		//this.id = id;
 	}
 	
 	//Prints tools + options (tools) for which customer, for how many days, and at what cost
 	public void printRental() 
 	{
+		System.out.println(this.customerName + " rented the following tools for " + this.days + " days at a cost of $" + this.cost + ":");
 		for(Tool t: tools)
 		{
-			System.out.println(t.getDescription);
+			System.out.println(t.getDescription());
 		}
 	}
 	
 	public int getCost() {
 		return this.cost;
+	}
+	
+}
+
+//--------------- Customer Factories -------------------
+//Customer factories are used at the start of the simulation to create 12 generic customer objects
+
+abstract class CustomerFactory {
+	int customersMade;
+	public CustomerFactory() {
+		this.customersMade = 0;
+	}
+	public abstract Customer getInstance();
+}
+
+class BusinessCustomerFactory extends CustomerFactory {
+
+	@Override
+	public Customer getInstance() {
+		this.customersMade += 1;
+		return new Customer("Business Customer " + (this.customersMade), "business", new BusinessRentAlgorithm());
+	}
+	
+}
+
+class CasualCustomerFactory extends CustomerFactory {
+
+	@Override
+	public Customer getInstance() {
+		this.customersMade += 1;
+		return new Customer("Casual Customer " + (this.customersMade), "casual", new CasualRentAlgorithm());
+	}
+	
+}
+
+class RegularCustomerFactory extends CustomerFactory {
+
+	@Override
+	public Customer getInstance() {
+		this.customersMade += 1;
+		return new Customer("Regular Customer " + (this.customersMade), "regular", new RegularRentAlgorithm());
 	}
 	
 }
