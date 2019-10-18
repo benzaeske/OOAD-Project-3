@@ -95,7 +95,9 @@ class YardworkTool implements Tool {
 }
 
 //----------------------------Tool Decorator----------------------------
-
+//The following website was referenced:
+//https://www.journaldev.com/1540/decorator-design-pattern-in-java-example
+	
 //Abstract ToolDecorator class.
 abstract class ToolDecorator implements Tool {
 	protected Tool tool;

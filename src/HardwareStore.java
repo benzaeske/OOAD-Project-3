@@ -120,6 +120,7 @@ public class HardwareStore {
 	//This should take no parameter because it should only return 1 tool
 	//Should handle removing tool from store inventory
 	public Tool getRandomTool() {
+		//https://www.geeksforgeeks.org/java-util-random-nextint-java/
 		Random rand = new Random();
 		int randIndex = rand.nextInt(this.inventory.size());
 		Tool randTool = this.inventory.get(randIndex);
