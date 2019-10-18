@@ -1,7 +1,7 @@
 # OOAD-Project-3
 ## Ben Zaeske, Peng Jiang, Mikayla Pickett
 
-We developed our code in Eclipse using Java 8. To run it, clone this repository into your Eclipse workspace and run the main method found within 'Simulation.java'. Our output is captured in simulation.out
+We developed our code in Eclipse using Java 8. To run it, clone this repository into your Eclipse workspace and run the main method found within 'Simulation.java'. One simulation output is captured in simulation.out. Running our program will update simulation.out with the most recent simulation print statements.
 
 ### Patterns Used
 
