@@ -10,5 +10,7 @@ We used the Observer, Factory, and Decorator pattern throughout our code.
 - The Observer pattern is documented in Customer.java and HardwareStore.java. For our observer pattern, we treated the HardwareStore object as a subject and Customer objects as observers of the HardwareStore.
 - The Factory Pattern is documented in Tool.java and Customer.java. It is utilized in Simulation.java to generate Tool and Customer objects, as well as in Customer.java to to automate the wrapping of Tool objects in Option decorators.
 
+*Note: Although we do not cite it in our code, we referenced the class lecture slides on Factory, Observer, and Decorator to write our code and draw our UML
+
 
 
